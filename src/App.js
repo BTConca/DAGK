@@ -1,66 +1,42 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import firebase from 'firebase';
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import getAppStore from './store/store';
+import './styles/styles.scss';
+import { Provider } from 'react-redux';
 
-var config = {
-  apiKey: "AIzaSyAzlLC0l-JJWNiSZ-Z-csObwbKLW_7gpsk",
-  authDomain: "chit-chat-18b09.firebaseapp.com",
-  databaseURL: "https://chit-chat-18b09.firebaseio.com",
-  projectId: "chit-chat-18b09",
-  storageBucket: "chit-chat-18b09.appspot.com",
-  messagingSenderId: "726573927821"
-};
+import AppRouter, { history } from './routers/AppRouter';
+import { firebase } from './firebase/firebase';
+import { login, logout } from './actions/auth';
 
-firebase.initializeApp(config);
+const store = getAppStore();
 
-class App extends Component {
-  state = { isSignedIn: false }
+const template = (
+    <Provider store={store}>
+        <AppRouter />
+    </Provider>
+);
 
-  uiConfig = {
-    signInFlow : "popup",
-    signInOptions :
-    [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID
-    ]
-    ,
-    callbacks:
-    {
-      signInSuccess: () => false
+let isRendered = false;
+const renderApp = () => {
+    if (!isRendered) {
+        ReactDOM.render(template, document.getElementById('app'));
+        isRendered = true;
     }
-  }
-
-  componentDidMount = () => {
-    firebase.auth().onAuthStateChanged(user => {
-      this.setState({isSignedIn : !!user})
-      if(user != null )
-      
-      console.log("user",user)
-    })
-  }
-
-  render() {
-    return (
-      <div className="App">
-        {this.state.isSignedIn ?
-          (<div>
-            <div> Signed In!</div>
-            <button onClick={() => firebase.auth().signOut()}>Sign Out!</button>
-            <h1>Wellcome {firebase.auth().currentUser.displayName}</h1>
-            <img alt="profile picture" src={firebase.auth().currentUser.photoUrl} />
-          </div>)
-          :
-          (<div>
-            <StyledFirebaseAuth
-            uiConfig = {this.uiConfig}
-            firebaseAuth = {firebase.auth()}
-            />
-          </div>
-          )}
-      </div>
-    );
-  }
 }
 
-export default App;
+firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+        console.log('login user id: ', user.uid);
+        console.log('name: ', user.displayName);
+        store.dispatch(login(user.uid));
+        renderApp();
+        if (history.location.pathname === '/') {
+            history.push('/dashboard');
+        }
+    } else {
+        console.log('logout');
+        store.dispatch(logout());
+        renderApp();
+        history.push('/');
+    }
+});

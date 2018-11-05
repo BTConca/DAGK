@@ -1,28 +1,40 @@
 {
-  "name": "google-react-login",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "firebase": "^5.5.6",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "react-firebase": "^2.2.8",
-    "react-firebaseui": "^3.1.2",
-    "react-scripts": "2.1.0"
-  },
+  "name": "react-redux-firebase",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "JavaSampleApproach",
+  "license": "MIT",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "serve": "live-server public",
+    "build": "webpack",
+    "dev-server": "webpack-dev-server"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "dependencies": {
+    "@material-ui/core": "^3.4.0",
+    "@material-ui/icons": "^3.0.1",
+    "babel-cli": "6.24.1",
+    "babel-core": "6.25.0",
+    "babel-loader": "7.1.4",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-react": "6.24.1",
+    "css-loader": "0.28.11",
+    "firebase": "4.13.1",
+    "firebaseui": "^3.4.1",
+    "node-sass": "4.8.3",
+    "react": "16.3.0",
+    "react-dom": "16.3.0",
+    "react-firebaseui": "^3.1.2",
+    "react-google-button": "^0.5.3",
+    "react-modal": "3.3.2",
+    "react-redux": "5.0.7",
+    "react-router-dom": "4.2.2",
+    "redux": "3.7.2",
+    "redux-thunk": "2.2.0",
+    "sass-loader": "6.0.7",
+    "style-loader": "0.20.3",
+    "webpack": "4.4.1",
+    "webpack-cli": "2.0.13",
+    "webpack-dev-server": "3.1.1"
+  }
 }
