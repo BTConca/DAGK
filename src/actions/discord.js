@@ -16,13 +16,16 @@ export const startDiscord = (showError) => {
   return (dispatch, getState) => {
     const state = getState();
     return memberbase.ref(`users`).once('value', (snapshot) => {
+      const users = [];
+      snapshot.forEach((childSnapshot) => {
+        users.push({
+          ...childSnapshot.val()
+        });
+      });
+
       const value = snapshot.val();
-      const id = member.id;
       if (value === null) {
         return showJoinError("Can't not start Discord!");
-      }
-      else if (value.user) {
-        history.push(`users/${snapshot.name}`);
       }
       else {
         dispatch(startListening(member.name));
@@ -32,20 +35,6 @@ export const startDiscord = (showError) => {
           unread: member.unread,
           lastRead: 0
         };
-        let people = [];
-        for (var key in value.) {
-          people.push({
-            id: value.people[key].id,
-            name: value.people[key].name,
-            unread: value.people[key].unread,
-            lastRead: value.people[key].lastRead
-          });
-        }
-        for (var key in value.messages) {
-          messages.push({
-            ...value.messages[key]
-          });
-        }
         return memberbase.ref(`rooms/${member.name}/people/${person.id}`).set(person).then((ref) => {
           memberbase.ref(`users/${person.id}/rooms/${member.name}`).set({ name: member.name });
 

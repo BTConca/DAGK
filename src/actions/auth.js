@@ -1,11 +1,22 @@
 import { firebase, googleAuthProvider } from '../firebase/firebase';
-
+import * as types from '../constants/ActionTypes';
 
 export const login = (uid,displayName) => ({
-    type: 'LOGIN',
+    type: types.LOGIN,
     uid,
     displayName
 });
+
+export const adduser = (uid,displayName) => ({
+    type: types.ADD_USER,
+    uid,
+    displayName
+});
+
+export const populateUsersList = users => ({
+  type: types.USERS_LIST,
+  users
+})
 
 export const logout = () => ({
     type: 'LOGOUT'
