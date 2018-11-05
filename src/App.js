@@ -28,7 +28,8 @@ firebase.auth().onAuthStateChanged(user => {
     if (user) {
         console.log('login user id: ', user.uid);
         console.log('name: ', user.displayName);
-        store.dispatch(login(user.uid));
+        const name = user.displayName ? user.displayName : user.email;
+        store.dispatch(login(user.uid,name));
         renderApp();
         if (history.location.pathname === '/') {
             history.push('/dashboard');

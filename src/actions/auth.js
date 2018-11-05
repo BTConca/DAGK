@@ -1,9 +1,10 @@
 import { firebase, googleAuthProvider } from '../firebase/firebase';
 
 
-export const login = (uid) => ({
+export const login = (uid,displayName) => ({
     type: 'LOGIN',
-    uid
+    uid,
+    displayName
 });
 
 export const logout = () => ({
@@ -17,6 +18,22 @@ export const getchat = () => ({
 export const firebaseLogin = () => {
     return () => {
        return firebase.auth().signInWithPopup(googleAuthProvider);
+       var user = firebase.auth().currentUser;
+       var name;
+       if (user !== null) {
+         name = user.displayName ? user.displayName : user.email;
+         database.ref(`users/${user.uid}`).once((snapshot) => {
+           if(!snapshot.val()) {
+             database.ref(`users/${user.uid}`).set({
+               name,
+               uid: user.uid,
+               email: user.email,
+               photoUrl: user.photoURL,
+               token
+             });
+           }
+         });
+       }
     };
 };
 
