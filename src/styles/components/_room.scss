@@ -15,7 +15,13 @@
 }
 
 .room-header__title {
-  font-size: $font-size-large;  
+  font-size: $font-size-large;
   color: #3498db;
+  font-weight: 700;
+}
+
+.room-header__online {
+  font-size: $font-size-large;
+  color: #000000;
   font-weight: 700;
 }

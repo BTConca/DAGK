@@ -36,7 +36,17 @@
 
 .list-item--message {
   align-items: center;
-  color: $grey;
+  color: #3498db;
+  justify-content: center;
+  padding: $m-size;
+  &:hover {
+    background: none;
+  }
+}
+
+.list-item--message--off {
+  align-items: center;
+  color: #A52A2A;
   justify-content: center;
   padding: $m-size;
   &:hover {

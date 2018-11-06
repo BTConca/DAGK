@@ -1,7 +1,8 @@
-import memberbase, { firebase } from '../firebase/firebase';
+import database, { firebase } from '../firebase/firebase';
 import { history } from '../routers/AppRouter';
 import moment from 'moment';
 import * as path from 'path';
+import * as types from '../constants/ActionTypes';
 
 export const createDiscord = ({ id, name }) => ({
   type: 'CREATE_DISCORD',
@@ -11,45 +12,65 @@ export const createDiscord = ({ id, name }) => ({
   }
 });
 
+export const addUser = (uid,displayName,photoURL,isOnline) => ({
+  type: types.ADD_USER,
+  uid,
+  displayName,
+  photoURL,
+  isOnline
+});
 
-export const startDiscord = (showError) => {
+
+
+export const startDiscord = (user = {}, showError) => {
   return (dispatch, getState) => {
-    const state = getState();
-    return memberbase.ref(`users`).once('value', (snapshot) => {
+    const users = [];
+    const sUser =
+    {
+      uid : user.uid,
+      displayName : user.displayName,
+      photoURL : user.photoURL,
+      isOnline : true
+    }
+    if(user === null)
+    {
+      return showCreateError('Room name not available!');
+    }
+    return database.ref('users').once('value',(snapshot) =>{
       const users = [];
-      snapshot.forEach((childSnapshot) => {
+      snapshot.forEach((child) =>{
         users.push({
-          ...childSnapshot.val()
+          ...child.val()
         });
       });
 
-      const value = snapshot.val();
-      if (value === null) {
-        return showJoinError("Can't not start Discord!");
-      }
-      else {
-        dispatch(startListening(member.name));
-        const person = {
-          name: member.name,
-          id: member.id,
-          unread: member.unread,
-          lastRead: 0
-        };
-        return memberbase.ref(`rooms/${member.name}/people/${person.id}`).set(person).then((ref) => {
-          memberbase.ref(`users/${person.id}/rooms/${member.name}`).set({ name: member.name });
+      users.map((i) => {
+        dispatch(addUser(i.uid,i.displayName,i.photoURL,i.isOnline));
+      })
 
-          dispatch(createRoom({
-            people: [...people, person],
-            name: member.name,
-            messages
-          }));
-          const perName = person.name;
-
-          dispatch(startSendMessage(`${perName} joined`, member.name, true));
-
-          history.push(`room/${member.name}`);
+      if (!users.find((r) => r.uid === sUser.uid)) {
+        return database.ref(`users/${sUser.uid}`).set(sUser).then(()=>{
+          dispatch(addUser(sUser.uid,sUser.displayName,sUser.photoURL,sUser.isOnline));
         });
       }
     });
+  };
+};
+
+export const goOnline = (user) => {
+  return (dispatch, getState) => {
+      return database.ref(`users/${user.uid}`).update({isOnline : true}).then(()=>
+      {
+        dispatch(online(user.uid));
+      });
   }
 };
+
+export const userList = () => ({
+  type: types.USERS_LIST
+})
+
+export const online = (uid) => ({
+  type: types.USER_ONLINE,
+  uid
+});

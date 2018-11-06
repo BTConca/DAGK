@@ -1,4 +1,4 @@
-import { firebase, googleAuthProvider } from '../firebase/firebase';
+import database, { firebase, googleAuthProvider } from '../firebase/firebase';
 import * as types from '../constants/ActionTypes';
 
 export const login = (uid,displayName) => ({
@@ -7,11 +7,9 @@ export const login = (uid,displayName) => ({
     displayName
 });
 
-export const adduser = (uid,displayName) => ({
-    type: types.ADD_USER,
-    uid,
-    displayName
-});
+export const clearState = () => ({
+  type: types.CLEAR_STATE
+})
 
 export const populateUsersList = users => ({
   type: types.USERS_LIST,
@@ -49,7 +47,23 @@ export const firebaseLogin = () => {
 };
 
 export const firebaseLogout = () => {
-    return () => {
-        return firebase.auth().signOut();
+  return (dispatch, getState) => {
+    const user = getState().auth;
+    if (user) {
+      const userId = user.uid;
+      const displayName = user.displayName;
+      database.ref(`users/${userId}`).update({isOnline : false}).then(()=>
+      {
+          dispatch(offline(user));
+          dispatch(clearState());
+          dispatch(logout());
+          return firebase.auth().signOut();
+      });
     }
+  };
 };
+
+export const offline = (uid) => ({
+  type: types.USER_OFFLINE,
+  uid,
+});

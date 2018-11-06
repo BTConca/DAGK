@@ -6,13 +6,11 @@ import { Provider } from 'react-redux';
 
 import AppRouter, { history } from './routers/AppRouter';
 import { firebase } from './firebase/firebase';
-import { login, logout,adduser } from './actions/auth';
+import { login, logout } from './actions/auth';
+import {startDiscord, viewUsers, goOnline} from './actions/discord';
 
 const store = getAppStore();
 
-store.dispatch(adduser("1",'Me'));
-
-store.dispatch(adduser("2",'Me1'));
 const template = (
     <Provider store={store}>
         <AppRouter />
@@ -27,13 +25,16 @@ const renderApp = () => {
     }
 }
 
+
+
 firebase.auth().onAuthStateChanged(user => {
     if (user) {
         console.log('login user id: ', user.uid);
         console.log('name: ', user.displayName);
         const name = user.displayName ? user.displayName : user.email;
         store.dispatch(login(user.uid,name));
-        store.dispatch(adduser(user.uid,name));
+        store.dispatch(startDiscord(user,"some thing happened"));
+        store.dispatch(goOnline(user));
         renderApp();
         if (history.location.pathname === '/') {
             history.push('/dashboard');

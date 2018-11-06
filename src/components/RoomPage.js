@@ -18,9 +18,7 @@ export class RoomPage extends React.Component {
       <div className="box-layout--messages">
         <div className="room-header">
           <div className="room-header__title">xxxxx</div>
-          <button className="button--leave-room">Leave room</button>
         </div>
-
         <form  autoComplete="off" id="message-form">
           <input type="text" name="message" className="text-input" placeholder="Send message" autoFocus />
           <button name="submit" className="login-button">Send</button>
