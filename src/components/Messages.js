@@ -6,19 +6,19 @@ import moment from 'moment';
 class Messages extends React.Component {
 
 
-  scrollToBottom = (options) => {
+  scrollToBottom (options){
     this.messagesEnd.scrollIntoView(options);
   }
-  
+
   componentDidMount() {
     this.scrollToBottom(false);
   }
-  
+
   componentDidUpdate() {
     this.scrollToBottom({block: 'end', behavior: "smooth"});
   }
 
-  displayMessages = (messages) => {
+  displayMessages (messages) {
     if (typeof messages === 'string') {
       return <li className="message__time">{messages}</li>;
     }
@@ -41,7 +41,7 @@ class Messages extends React.Component {
         prevSender = message.sender.uid;
         a.push(<li key={message.id} className="message">{name}{time}{text}</li>);
       }
-    }); 
+    });
     // a.push(<li key="" tabIndex="1"></li>);
     return a;
   }
@@ -54,7 +54,7 @@ class Messages extends React.Component {
           this.displayMessages(this.props.messages)
         }
         <li ref={(el) => { this.messagesEnd = el; }}></li>
-        </ul> 
+        </ul>
       </div>
     );
   }

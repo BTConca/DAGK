@@ -9,6 +9,7 @@ import { firebase } from './firebase/firebase';
 import { login, logout } from './actions/auth';
 import {startDiscord, viewUsers, goOnline} from './actions/discord';
 
+
 const store = getAppStore();
 
 const template = (

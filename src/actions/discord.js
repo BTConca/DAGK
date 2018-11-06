@@ -20,6 +20,15 @@ export const addUser = (uid,displayName,photoURL,isOnline) => ({
   isOnline
 });
 
+export const createRoom = ({ id, name, people, messages = [] }) => ({
+  type: 'CREATE_ROOM',
+  room: {
+    id,
+    name,
+    people,
+    messages
+  }
+});
 
 
 export const startDiscord = (user = {}, showError) => {
@@ -54,6 +63,38 @@ export const startDiscord = (user = {}, showError) => {
         });
       }
     });
+  };
+};
+
+let nextMessageId = 0
+export const addMessage = (message, author) => ({
+  type: types.ADD_MESSAGE,
+  id: nextMessageId++,
+  message,
+  author
+})
+
+export const messageReceived = (message, author) => ({
+  type: types.MESSAGE_RECEIVED,
+  id: nextMessageId++,
+  message,
+  author
+})
+
+export const startSendMessage = (text, roomName) => {
+  return (dispatch, getState) => {
+    const user = getState().auth;
+    if (user) {
+      const uid = user.uid;
+      const displayName = user.displayName;
+      const message = {
+        sender: { uid, displayName },
+        text,
+        createdAt: moment().format(),
+        status
+      };
+      return database.ref(`rooms/${roomName}/messages`).set(message);
+    }
   };
 };
 
